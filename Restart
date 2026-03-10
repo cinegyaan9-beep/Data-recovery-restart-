@@ -1,0 +1,91 @@
+import time
+import os
+import random
+
+START_PERCENT = 95.29
+END_PERCENT = 99.99
+DOWNLOAD_TIME = 32400   # 9 hours
+
+spinner = ["|","/","-","\\"]
+bar_length = 30
+
+folders = [
+"DCIM","Pictures","Movies","Music","Download","WhatsApp",
+"Android","Documents","Telegram","Instagram","Camera",
+"Bluetooth","Screenshots","CallRecordings","Contacts"
+]
+
+GREEN = "\033[92m"
+CYAN = "\033[96m"
+YELLOW = "\033[93m"
+RESET = "\033[0m"
+
+# ---------- DOWNLOAD PROGRESS ----------
+start = time.time()
+
+while True:
+
+    elapsed = time.time() - start
+
+    if elapsed > DOWNLOAD_TIME:
+        percent = END_PERCENT
+    else:
+        percent = START_PERCENT + ((END_PERCENT-START_PERCENT)*(elapsed/DOWNLOAD_TIME))
+
+    filled = int(bar_length * percent // 100)
+    bar = "█"*filled + " "*(bar_length-filled)
+
+    spin = spinner[int(elapsed) % len(spinner)]
+
+    os.system("clear")
+
+    print(CYAN+"┌────────────────────────────────────────────┐")
+    print(f"│ Downloading Recovery Package {spin}")
+    print(f"│ [{bar}] {percent:6.2f}%")
+    print("└────────────────────────────────────────────┘"+RESET)
+
+    if percent >= END_PERCENT:
+        break
+
+    time.sleep(1)
+
+print(GREEN+"\nDownload Complete\n"+RESET)
+time.sleep(3)
+
+# ---------- EXTRACTION ----------
+total_mb = 12000
+downloaded = 0
+
+total_folders = len(folders)
+
+for index, folder in enumerate(folders, start=1):
+
+    for i in range(101):
+
+        downloaded += random.randint(5,20)
+        if downloaded > total_mb:
+            downloaded = total_mb
+
+        spin = spinner[i % len(spinner)]
+
+        os.system("clear")
+
+        # TOP TRANSFER
+        print(YELLOW+"┌────────────────────────────────────────────┐")
+        print(f"│ Data transferring to device {spin}")
+        print(f"│ {downloaded} MB / {total_mb} MB")
+        print("└────────────────────────────────────────────┘"+RESET)
+
+        # EXTRACTION
+        filled = int(bar_length * i // 100)
+        bar = "█"*filled + " "*(bar_length-filled)
+
+        print(GREEN+"┌────────────────────────────────────────────┐")
+        print(f"│ Extracting Folder : {folder}")
+        print(f"│ Folder {index} / {total_folders}")
+        print(f"│ [{bar}] {i}%")
+        print("└────────────────────────────────────────────┘"+RESET)
+
+        time.sleep(864)   # ~1 day per folder (86400 sec / 100 steps)
+
+print(GREEN+"\n✔ All folders extracted successfully\n"+RESET)
